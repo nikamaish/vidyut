@@ -21,13 +21,12 @@ def add_data_to_firestore(data_entries):
 
         # Add each main data entry to Firestore
         for main_entry in data_entries:
-            # Generate a list of 5 sub-entries with timestamps
+            # Generate a list of 5 sub-entries
             sub_entries = []
             for i in range(5):
                 sub_entry = {
                     'sub_entry_id': f'sub_entry_{i+1}',
                     'data': f'This is sub entry {i+1} of {main_entry["main_entry_id"]}',
-                   
                 }
                 sub_entries.append(sub_entry)
 
@@ -35,7 +34,7 @@ def add_data_to_firestore(data_entries):
             main_entry_data = {
                 'main_entry_id': main_entry['main_entry_id'],
                 'sub_entries': sub_entries,
-             'timestamp': datetime.now(timezone)
+                'timestamp': datetime.now(timezone)
             }
             collection_ref.add(main_entry_data)
 

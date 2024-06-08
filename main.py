@@ -61,7 +61,26 @@ def start_background_task():
         thread = threading.Thread(target=background_task)
         thread.daemon = True
         thread.start()
-        return jsonify({"success": True, "message": "Data Added Successfully"}), 200
+        return jsonify({"success": True, "message": "Background task started"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/get_data', methods=['GET'])
+def get_data():
+    try:
+        # Fetch data from Firestore
+        collection_ref = db.collection('entries')
+        docs = collection_ref.stream()
+
+        # Prepare the data to be returned as JSON
+        entries = []
+        for doc in docs:
+            doc_dict = doc.to_dict()
+            doc_dict['id'] = doc.id  # Include the document ID
+            entries.append(doc_dict)
+
+        return jsonify({"success": True, "data": entries}), 200
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500

@@ -31,13 +31,16 @@ def add_data_to_firestore(data_entries):
                 }
                 sub_entries.append(sub_entry)
 
-            # Add the main entry with sub-entries to Firestore
+            # Create a timestamp-based document ID
+            timestamp = datetime.now(timezone).strftime('%Y%m%d%H%M%S%f')
             main_entry_data = {
                 'main_entry_id': main_entry['main_entry_id'],
                 'sub_entries': sub_entries,
                 'timestamp': datetime.now(timezone)
             }
-            collection_ref.add(main_entry_data)
+
+            # Add the main entry with sub-entries to Firestore using the timestamp as the document ID
+            collection_ref.document(timestamp).set(main_entry_data)
 
         return {"success": True, "message": "Data added successfully"}
 
@@ -61,7 +64,7 @@ def start_background_task():
         thread = threading.Thread(target=background_task)
         thread.daemon = True
         thread.start()
-        return jsonify({"success": True, "message": "Background task started"}), 200
+        return jsonify({"success": True, "message": "Data added successfully"}), 200
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500

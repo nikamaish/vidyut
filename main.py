@@ -4,6 +4,7 @@ from firebase_admin import credentials, firestore
 from datetime import datetime
 import threading
 import time
+import pytz
 
 app = Flask(__name__)
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 cred = credentials.Certificate('serviceAccountKey.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+timezone = pytz.timezone('Asia/Kolkata')
 
 def add_data_to_firestore(data_entries):
     try:
@@ -25,7 +27,7 @@ def add_data_to_firestore(data_entries):
                 sub_entry = {
                     'sub_entry_id': f'sub_entry_{i+1}',
                     'data': f'This is sub entry {i+1} of {main_entry["main_entry_id"]}',
-                    'timestamp': datetime.now()
+                   
                 }
                 sub_entries.append(sub_entry)
 
@@ -33,7 +35,7 @@ def add_data_to_firestore(data_entries):
             main_entry_data = {
                 'main_entry_id': main_entry['main_entry_id'],
                 'sub_entries': sub_entries,
-                'timestamp': datetime.now()
+             'timestamp': datetime.now(timezone)
             }
             collection_ref.add(main_entry_data)
 

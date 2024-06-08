@@ -5,6 +5,7 @@ from datetime import datetime
 import threading
 import time
 import pytz
+from data_generator import generate_random_data  # Import the function
 
 app = Flask(__name__)
 
@@ -43,16 +44,6 @@ def add_data_to_firestore(data_entries):
     except Exception as e:
         return {"success": False, "message": str(e)}
 
-def generate_random_data():
-    data = []
-    main_entry_names = ['entry_name_1', 'entry_name_2', 'entry_name_3', 'entry_name_4', 'entry_name_5']
-    for name in main_entry_names:
-        main_entry = {
-            'main_entry_id': name
-        }
-        data.append(main_entry)
-    return {'data': data}
-
 def background_task():
     while True:
         random_data = generate_random_data()
@@ -70,7 +61,7 @@ def start_background_task():
         thread = threading.Thread(target=background_task)
         thread.daemon = True
         thread.start()
-        return jsonify({"success": True, "message": "Data added successfully"}), 200
+        return jsonify({"success": True, "message": "Data Added Successfully"}), 200
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500

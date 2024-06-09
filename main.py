@@ -49,8 +49,9 @@ def add_data_to_firestore(data_entries):
 
 def background_task():
     while True:
+        # Generate and add 5 main entries
         random_data = generate_random_data()
-        add_data_to_firestore(random_data['data'])
+        add_data_to_firestore(random_data['data'][:5])
         time.sleep(5)
 
 @app.route('/')

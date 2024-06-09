@@ -31,16 +31,16 @@ def add_data_to_firestore(data_entries):
                 }
                 sub_entries.append(sub_entry)
 
-            # Create a timestamp-based document ID
-            timestamp = datetime.now(timezone).strftime('%Y%m%d%H%M%S%f')
+            # Create a Unix timestamp-based document ID
+            timestamp = int(time.time())
             main_entry_data = {
                 'main_entry_id': main_entry['main_entry_id'],
                 'sub_entries': sub_entries,
                 'timestamp': datetime.now(timezone)
             }
 
-            # Add the main entry with sub-entries to Firestore using the timestamp as the document ID
-            collection_ref.document(timestamp).set(main_entry_data)
+            # Add the main entry with sub-entries to Firestore using the Unix timestamp as the document ID
+            collection_ref.document(str(timestamp)).set(main_entry_data)
 
         return {"success": True, "message": "Data added successfully"}
 
